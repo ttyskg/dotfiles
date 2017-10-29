@@ -1,7 +1,9 @@
 "##### Plugins Setting #####
 execute pathogen#infect()
-syntax on
+syntax enable
 filetype plugin indent on
+set background=dark
+colorscheme solarized
 
 "##### Dispray Setting #####
 set number
