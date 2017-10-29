@@ -1,1 +1,1 @@
-.vim/bundle/vim-pathogen/autoload/pathogen.vim
+/home/tatsu/dotfiles/.vim/bundle/vim-pathogen/autoload/pathogen.vim
