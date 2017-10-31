@@ -116,6 +116,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# change file/directory permission to Linux default.
 umask 022
 
 # Setting LS_COLORS as Sorarized
