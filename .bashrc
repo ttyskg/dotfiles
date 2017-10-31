@@ -118,7 +118,7 @@ fi
 
 umask 022
 
-#Setting LS_COLORS as Sorarized
+# Setting LS_COLORS as Sorarized
 if [ -f ~/.dircolors ]; then
     if type dircolors > /dev/null 2>&1; then
         eval $(dircolors ~/.dircolors)
@@ -126,3 +126,8 @@ if [ -f ~/.dircolors ]; then
         eval $(gdircolors ~/.dircolors)
     fi
 fi
+
+# pyenv setting
+export PYENV_ROOT="$HOME/,pyenv"
+export PATH="$PYENV_ROOT/bin;$PATH"
+eval "$(pyenv init -)"
