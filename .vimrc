@@ -13,6 +13,10 @@ let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=0
 
+"# Setting for NERDTree
+map <C-n> :NERDTreeToggle<CR>
+
+
 "##### Dispray Setting #####
 set number
 set title
@@ -20,6 +24,7 @@ set showmatch
 set tabstop=4
 set smartindent
 set visualbell t_vb=
+
 
 "##### Search Setting #####
 set ignorecase
