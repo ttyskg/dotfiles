@@ -16,6 +16,12 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=0
 "# Setting for NERDTree
 map <C-n> :NERDTreeToggle<CR>
 
+"# Setting for lightline.vim
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'solarized'
+      \ }
+
 
 "##### Dispray Setting #####
 set number
