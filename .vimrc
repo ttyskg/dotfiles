@@ -30,6 +30,7 @@ set showmatch
 set tabstop=4
 set smartindent
 set visualbell t_vb=
+set expandtab
 
 
 "##### Search Setting #####
