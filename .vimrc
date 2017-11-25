@@ -31,6 +31,7 @@ set tabstop=4
 set smartindent
 set visualbell t_vb=
 set expandtab
+set nrformats=
 
 
 "##### Search Setting #####
