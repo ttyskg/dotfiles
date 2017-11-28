@@ -32,6 +32,7 @@ set smartindent
 set visualbell t_vb=
 set expandtab
 set nrformats=
+let &colorcolumn=join(range(80,100),",")
 
 
 "##### Search Setting #####
