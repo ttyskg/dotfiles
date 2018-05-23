@@ -22,9 +22,17 @@ let g:lightline = {
       \ 'colorscheme': 'solarized'
       \ }
 
+"##### File Setting #####
+set fenc=utf-8
+set nobackup
+set noswapfile
+set autoread
+set showcmd
 
 "##### Dispray Setting #####
 set number
+set cursorline
+"set cursorcolumn
 set title
 set showmatch
 set tabstop=4
@@ -39,3 +47,5 @@ let &colorcolumn=join(range(80,100),",")
 set ignorecase
 set smartcase
 set wrapscan
+set hlsearch
+nmap <Esc><Esc> :nohlsearch<CR><Esc>
