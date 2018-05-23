@@ -1,1 +1,2 @@
-/home/tatsu/dotfiles/.gitignore
+# vim cache
+.netrwhist

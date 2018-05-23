@@ -1,1 +1,7 @@
-/home/tatsu/dotfiles/.gitconfig
+[user]
+	name = tatsu
+	email = tatsu100311@gmail.com
+[core]
+	editor = vi
+[push]
+	default = simple
