@@ -13,3 +13,7 @@
 [submodule ".vim/bundle/lightline.vim"]
 	path = .vim/bundle/lightline.vim
 	url = https://github.com/itchyny/lightline.vim.git
+[submodule ".fonts/source-code-pro"]
+	path = .fonts/source-code-pro
+	url = https://github.com/adobe-fonts/source-code-pro.git
+	branch = release
