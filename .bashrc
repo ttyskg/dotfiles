@@ -132,3 +132,10 @@ fi
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+
+# alias
+alias ..='cd ..'
+alias gs='git status'
+alias tmux-changekey='tmux set-option -ag prefix C-b'
+alias tmux-revertkey='tmux set-option -ag prefix C-s'
