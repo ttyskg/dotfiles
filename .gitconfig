@@ -2,6 +2,8 @@
 	name = tatsu
 	email = tatsu100311@gmail.com
 [core]
-	editor = vi
+    editor = vim -c \"set fenc=utf-8\"
 [push]
 	default = simple
+[alias]
+	lol = log --graph --decorate=full --pretty=oneline --all --abbrev-commit
