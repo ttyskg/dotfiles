@@ -128,11 +128,6 @@ if [ -f ~/.dircolors ]; then
     fi
 fi
 
-# pyenv setting
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
 # X server setting
 export DISPLAY=localhost:0.0
 export LIBGL_ALWAYS_INDIRECT=1
