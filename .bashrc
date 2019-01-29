@@ -137,3 +137,9 @@ alias ..='cd ..'
 alias gs='git status'
 alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
+
+# User specific functions
+if [[ -t 0 ]]; then
+    stty stop undef
+    stty start undef
+fi
