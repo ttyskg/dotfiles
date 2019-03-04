@@ -1,19 +1,16 @@
-[submodule ".vim/bundle/vim-pathogen"]
-	path = .vim/bundle/vim-pathogen
-	url = git://github.com/tpope/vim-pathogen.git
-[submodule ".vim/bundle/vim-colors-solarized"]
-	path = .vim/bundle/vim-colors-solarized
-	url = git://github.com/altercation/vim-colors-solarized.git
-[submodule ".vim/bundle/vim-indent-guides"]
-	path = .vim/bundle/vim-indent-guides
-	url = git://github.com/nathanaelkane/vim-indent-guides.git
-[submodule ".vim/bundle/nerdtree"]
-	path = .vim/bundle/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
-[submodule ".vim/bundle/lightline.vim"]
-	path = .vim/bundle/lightline.vim
-	url = https://github.com/itchyny/lightline.vim.git
 [submodule ".fonts/source-code-pro"]
 	path = .fonts/source-code-pro
 	url = https://github.com/adobe-fonts/source-code-pro.git
 	branch = release
+[submodule ".vim/pack/mypack/start/nerdtree"]
+	path = .vim/pack/mypack/start/nerdtree
+	url = git@github.com:scrooloose/nerdtree.git
+[submodule ".vim/pack/mypack/start/vim-colors-solarized"]
+	path = .vim/pack/mypack/start/vim-colors-solarized
+	url = git@github.com:altercation/vim-colors-solarized.git
+[submodule ".vim/pack/mypack/start/vim-indent-guides"]
+	path = .vim/pack/mypack/start/vim-indent-guides
+	url = git@github.com:nathanaelkane/vim-indent-guides.git
+[submodule ".vim/pack/mypack/start/lightline.vim"]
+	path = .vim/pack/mypack/start/lightline.vim
+	url = git@github.com:itchyny/lightline.vim.git
