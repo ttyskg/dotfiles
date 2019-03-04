@@ -21,6 +21,12 @@ let g:lightline = {
       \ 'colorscheme': 'solarized'
       \ }
 
+"# Setting for UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsEditSplit="tabdo"
+
 "##### File Setting #####
 set fenc=utf-8
 set nobackup
