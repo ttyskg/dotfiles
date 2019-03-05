@@ -18,4 +18,13 @@ for f in .??*; do
   ln -snfv ~/dotfiles/"$f" ~/
 done
 
+if [ ! -d ~/bin ]
+  then
+    mkdir ~/bin
+fi
+
+for f in bin/*; do
+  ln -snfv ~/dotfiles/"$f" ~/bin/
+done
+
 echo "finished!"

@@ -132,8 +132,9 @@ fi
 export DISPLAY=localhost:0.0
 export LIBGL_ALWAYS_INDIRECT=1
 
-# alias
+# my alias
 alias ..='cd ..'
+alias cb='~/bin/clipboard.sh'
 alias gs='git status'
 alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
