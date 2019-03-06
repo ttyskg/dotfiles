@@ -136,6 +136,12 @@ export LIBGL_ALWAYS_INDIRECT=1
 alias ..='cd ..'
 alias cb='~/bin/clipboard.sh'
 alias gs='git status'
+alias ga='git add'
+alias gaa='git add -A'
+alias gb='git branch'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias go='git checkout'
 alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
 
