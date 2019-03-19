@@ -787,3 +787,13 @@ def gcd(a, d):
         a, b = b, a % b
 	return a
 endsnippet
+
+snippet warshall_floyd "Warshall Floyd Algorithm" b
+def warshall_floyd(d):
+    n = len(d)
+    for i in range(n):
+	    for j in range(n):
+		    for k in range(n):
+			    d[j][k] = min(d[j][k], d[j][i] + d[i][k])
+	return d
+endsnippet
