@@ -791,6 +791,12 @@ def gcd(a, d):
 endsnippet
 
 snippet warshall_floyd "Warshall Floyd Algorithm" b
+import numpy as np
+from scipy.sparse.csgraph import floyd_warshall
+
+G = floyd_warshall(d)  # d: 2D ndarray
+
+
 def warshall_floyd(d):
     n = len(d)
     for i in range(n):
