@@ -783,11 +783,23 @@ def sieve(n):
 endsnippet
 
 snippet gcd "Euclidean Algorithm" b
-def gcd(a, d):
+def gcd(a, b):
     """Euclidean Algorithm"""
     while b != 0:
         a, b = b, a % b
 	return a
+endsnippet
+
+snippet lcm "Lowest Common Multiple" b
+def gcd(a, b):
+    """Euclidean Algorithm"""
+    while b != 0:
+        a, b = b, a % b
+	return a
+
+
+def lcm(a, b):
+    return (a * b) // gcd(a, b)
 endsnippet
 
 snippet warshall_floyd "Warshall Floyd Algorithm" b
