@@ -144,6 +144,7 @@ alias gcm='git commit -m'
 alias go='git checkout'
 alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
+alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
 
 # User specific functions
 if [[ -t 0 ]]; then
