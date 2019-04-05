@@ -761,8 +761,8 @@ class UnionFind:
 			self.root[ry] = rx
 			self.size[rx] += self.size[ry]
 			self.weight[ry] = -w - self.weight[y] + self.weight[x]
-			if self.rank[x] == self.rank[y]:
-				self.rank[x] += 1
+			if self.rank[rx] == self.rank[ry]:
+				self.rank[rx] += 1
 
 	def is_same(self, x, y):
 		return self.find(x) == self.find(y)
@@ -852,3 +852,26 @@ def comb(n, r, MOD):
         return (factrial[n] * fact_inv[r] * fact_inv[n-r]) % MOD
 endsnippet
 
+snippet kruskal "Kruskal algorithm" b
+from heapq import heappush, heappop
+
+def kruskal(g, n):
+    """ Kruskal algorithm is a minimum-spanning-tree algorithm
+	g: weighted undirected graph ex) [(cost, node1, node2), ...]
+	n: number of the nodes
+
+	return minimum-spanning-tree
+	"""
+	mst = []
+	UF = UnionFind(n)
+	while len(g) > 0:
+	    c, n1, n2 = heappop(g)
+
+		if UF.is_same(n1, n2):
+		    continue
+		else:
+		    mst.append((c, n1, n2))
+			UF.unite(n1, n2)
+	
+	return mst
+endsnippet
