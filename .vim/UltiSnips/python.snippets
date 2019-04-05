@@ -738,29 +738,37 @@ class UnionFind:
 	def __init__(self, n):
 		self.root = [i for i in range(n+1)]
 		self.rank = [0] * (n+1)
-		self.size = [1] * (n+1)
+		self.size = [1] * (n+1)  # The number of nodes under the target node.
+		self.weight = [0] * (n+1)  # Distance from the root
 
 	def find(self, x):
 		if self.root[x] == x:
 			return x
 		else:
-			self.root[x] = self.find(self.root[x])
+		    y = self.find(self.root[x])
+			self.weight[x] += self.weight[self.root[x]]
+			self.root[x] = y
 			return self.root[x]
 
-	def unite(self, x, y):
-		x = self.find(x)
-		y = self.find(y)
-		if self.rank[x] < self.rank[y]:
-			self.root[x] = y
-			self.size[y] += self.size[x]
+	def unite(self, x, y, w=0):
+		rx = self.find(x)
+		ry = self.find(y)
+		if self.rank[rx] < self.rank[ry]:
+			self.root[rx] = ry
+			self.size[ry] += self.size[rx]
+			self.weight[rx] = w - self.weight[x] + self.weight[y]
 		else:
-			self.root[y] = x
-			self.size[x] += self.size[y]
+			self.root[ry] = rx
+			self.size[rx] += self.size[ry]
+			self.weight[ry] = -w - self.weight[y] + self.weight[x]
 			if self.rank[x] == self.rank[y]:
 				self.rank[x] += 1
 
 	def is_same(self, x, y):
 		return self.find(x) == self.find(y)
+	
+	def diff(self, x, y):
+	    return self.weight[y] - self.weight[x]
 endsnippet
 
 snippet sieve "Sieve of Eratosthenes" b
