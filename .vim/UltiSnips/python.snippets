@@ -895,7 +895,7 @@ def bellman_ford(n, edges, source):
         for edge in edges:
             if dist[edge[1]] > dist[edge[0]] + edge[2]:
                 dist[edge[1]] = dist[edge[0]] + edge[2]
-                if i == n - 1 and edge[1] == n-1:
+                if i == n - 1:
                     return -1
 
     return dist
