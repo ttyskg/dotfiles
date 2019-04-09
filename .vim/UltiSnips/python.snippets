@@ -875,3 +875,29 @@ def kruskal(g, n):
 	
 	return mst
 endsnippet
+
+snippet bellman_ford "Bellman Ford algorithm" b
+def bellman_ford(n, edges, source):
+    """Bellman Ford algorithm
+
+    n: int, the number of nodes.
+    edges: list, [edge1, edge2, ... ]
+           edge_i = [node, neighbour, weight of the edge]
+    source: int, start node.
+    """
+    # Initializing the distance from source.
+    inf = float('inf')
+    dist=[inf for i in range(n)]
+    dist[source] = 0
+
+    # Relaxation step
+    for i in range(n):
+        for edge in edges:
+            if dist[edge[1]] > dist[edge[0]] + edge[2]:
+                dist[edge[1]] = dist[edge[0]] + edge[2]
+                if i == n - 1 and edge[1] == n-1:
+                    return -1
+
+    return dist
+endsnippet
+
