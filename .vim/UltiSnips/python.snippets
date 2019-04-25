@@ -751,6 +751,8 @@ class UnionFind:
 			return self.root[x]
 
 	def unite(self, x, y, w=0):
+		if self.is_same(x, y):
+		    return
 		rx = self.find(x)
 		ry = self.find(y)
 		if self.rank[rx] < self.rank[ry]:
