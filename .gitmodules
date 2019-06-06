@@ -8,12 +8,12 @@
 [submodule ".vim/pack/mypack/start/vim-colors-solarized"]
 	path = .vim/pack/mypack/start/vim-colors-solarized
 	url = git@github.com:altercation/vim-colors-solarized.git
-[submodule ".vim/pack/mypack/start/vim-indent-guides"]
-	path = .vim/pack/mypack/start/vim-indent-guides
-	url = git@github.com:nathanaelkane/vim-indent-guides.git
 [submodule ".vim/pack/mypack/start/lightline.vim"]
 	path = .vim/pack/mypack/start/lightline.vim
 	url = git@github.com:itchyny/lightline.vim.git
 [submodule ".vim/pack/mypack/start/ultisnips"]
 	path = .vim/pack/mypack/start/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
+[submodule ".vim/pack/mypack/start/indentLine"]
+	path = .vim/pack/mypack/start/indentLine
+	url = git@github.com:Yggdroot/indentLine.git
