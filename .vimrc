@@ -7,6 +7,7 @@ colorscheme solarized
 "# Setting for indentLine
 let g:indentLine_char = '|'
 let g:indentLine_faster = 1
+let g:indentLine_color_term = 10
 
 "# Setting for NERDTree
 map <C-n> :NERDTreeToggle<CR>
