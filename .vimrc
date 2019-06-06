@@ -46,8 +46,14 @@ set smartindent
 set visualbell t_vb=
 set expandtab
 set nrformats=
-let &colorcolumn=join(range(80,100),",")
-
+let &colorcolumn=join(range(80,82),",")
+"Background transparency settings
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+highlight LineNr ctermbg=NONE guibg=NONE
+highlight Folded ctermbg=NONE guibg=NONE
+highlight SpeciaKey ctermbg=NONE guibg=NONE
+highlight EndOfBuffer ctermbg=NONE guibg=NONE
 
 "##### Search Setting #####
 set ignorecase
