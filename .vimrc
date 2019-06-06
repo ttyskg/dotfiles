@@ -46,7 +46,7 @@ set smartindent
 set visualbell t_vb=
 set expandtab
 set nrformats=
-let &colorcolumn=join(range(80,82),",")
+let &colorcolumn=join(range(80,80),",")
 "Background transparency settings
 highlight Normal ctermbg=NONE guibg=NONE
 highlight NonText ctermbg=NONE guibg=NONE
