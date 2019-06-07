@@ -36,7 +36,7 @@ set showcmd
 
 "##### Dispray Setting #####
 set number
-set cursorline
+"set cursorline
 "set cursorcolumn
 set title
 set showmatch
@@ -45,7 +45,7 @@ set smartindent
 set visualbell t_vb=
 set expandtab
 set nrformats=
-let &colorcolumn=join(range(80,80),",")
+"let &colorcolumn=join(range(80,80),",")
 "Background transparency settings
 highlight Normal ctermbg=NONE guibg=NONE
 highlight NonText ctermbg=NONE guibg=NONE
@@ -53,6 +53,12 @@ highlight LineNr ctermbg=NONE guibg=NONE
 highlight Folded ctermbg=NONE guibg=NONE
 highlight SpeciaKey ctermbg=NONE guibg=NONE
 highlight EndOfBuffer ctermbg=NONE guibg=NONE
+
+augroup CursorLineOnlyInActiveWindow
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinENter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
+augroup END
 
 "##### Search Setting #####
 set ignorecase
