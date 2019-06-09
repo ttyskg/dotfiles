@@ -135,6 +135,7 @@ export LIBGL_ALWAYS_INDIRECT=1
 # my alias
 alias ..='cd ..'
 alias cb='~/bin/clipboard.sh'
+alias cbx='~/bin/clipboard_xclip.sh'
 alias gs='git status'
 alias ga='git add'
 alias gaa='git add -A'
