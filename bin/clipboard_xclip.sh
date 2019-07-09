@@ -1,2 +1,2 @@
 #! /bin/sh
-cat $1 | xclip
+cat $1 | xclip -selection "clipboard"
