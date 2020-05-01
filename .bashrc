@@ -155,3 +155,6 @@ fi
 
 # NodeBrew setting
 export PATH=$HOME/.nodebrew/current/bin:$PATH
+
+# Bioinformatic tools
+export PATH=$HOME/bin/samtools/bin:$PATH
