@@ -152,7 +152,7 @@ export PROMPT_DIRTRIM=1
 function parse_git_branch {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
    }
-export PS1="\u@\h:\w \t\$(parse_git_branch)\\$ "
+export PS1="\[\e[01;32m\]\u@\h\[\e[01;00m\]:\[\e[01;32m\]\w \t\[\e[01;35m\]\$(parse_git_branch)\[\e[m\]\$ "
 
 # User specific functions
 if [[ -t 0 ]]; then
