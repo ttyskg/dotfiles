@@ -147,6 +147,13 @@ alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
 alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
 
+# Prompt setting
+export PROMPT_DIRTRIM=1
+function parse_git_branch {
+    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+   }
+export PS1="\u@\h:\w \t\$(parse_git_branch)\\$ "
+
 # User specific functions
 if [[ -t 0 ]]; then
     stty stop undef
