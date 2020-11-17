@@ -168,6 +168,8 @@ export PATH=$HOME/.nodebrew/current/bin:$PATH
 
 # Bioinformatic tools
 export PATH=$HOME/bin/samtools/bin:$PATH
+export PATH=$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH
 
 # pipenv setting
 export PIPENV_VENV_IN_PROJECT="enabled"
+
