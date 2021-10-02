@@ -130,7 +130,7 @@ fi
 
 # X server setting
 DISTRO=$(cat /etc/*release | grep ^NAME= | awk -F '[=]' '{print $2}')
-if [ ! $DISTRO = "\"Pengwin\"" ]; then
+if [ ! "$DISTRO" = "\"Pengwin\"" ]; then
     export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
     export LIBGL_ALWAYS_INDIRECT=1
 fi
