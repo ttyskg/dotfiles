@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Make .devcontainer directory for VS code.
+# .devcontainer
+#  |- devcontainer.json
+#  |- docker-compose.yml
+#  |- Dockerfile
+#  |- make_env.sh
+#  |- requirements.txt 
+#  |_ requirements.r
+
+set -eu
+
+echo "Making .devcontainer directory..."
+mkdir .devcontainer
+
+cd .devcontainer
+
+echo "  Making devcontainer.json"
+echo '{
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev",
+    "workspaceFolder": "/tmp/work",
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-renderers",
+        "ms-toolsai.jupyter-keymap",
+        "streetsidesoftware.code-spell-checker",
+        "mechatroner.rainbow-csv",
+        "eamodio.gitlens"
+    ]
+}' > devcontainer.json
+
+
+echo "  Making docker-compose.yml"
+echo "\
+version: '3.3'
+
+services:
+  dev:
+    env_file: .env
+    build: .
+    stdin_open: true
+    working_dir: '/tmp/work'
+    volumes:
+      - ..:/tmp/work" > docker-compose.yml
+
+
+echo "  Making Dockerfile"
+echo "\
+FROM python:3.10.4
+
+# specify user
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g \${GID} docker
+RUN useradd -u \${UID} -g \${GID} -s /bin/bash -m docker
+
+RUN apt-get update \\
+    && apt-get install -y \\
+    git \\
+    && rm -rf /var/lib/apt/lists/*
+
+# Setup working directory
+WORKDIR /tmp/work
+
+COPY requirements.txt \${PWD}
+
+RUN python -m pip install --upgrade pip \\
+    && pip install -r requirements.txt 
+
+# set non root user
+USER \${UID}" > Dockerfile
+
+
+echo "  Making make_env.sh"
+echo "\
+#!/bin/bash
+
+UID=`id -u`
+GID=`id -g`
+
+echo 'UID=\${UID}' >> .env
+echo 'GID=\${GID}' >> .env
+" > make_env.sh
+chmod 755 make_env.sh
+
+
+echo "  Making reuirements.txt"
+echo "\
+" >> requirements.txt
