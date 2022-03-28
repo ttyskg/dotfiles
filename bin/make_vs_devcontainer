@@ -5,7 +5,7 @@
 #  |- devcontainer.json
 #  |- docker-compose.yml
 #  |- Dockerfile
-#  |- make_env.sh
+#  |- .env
 #  |- requirements.txt 
 #  |_ requirements.r
 
@@ -15,6 +15,7 @@ echo "Making .devcontainer directory..."
 mkdir .devcontainer
 
 cd .devcontainer
+
 
 echo "  Making devcontainer.json"
 echo '{
@@ -75,17 +76,9 @@ RUN python -m pip install --upgrade pip \\
 USER \${UID}" > Dockerfile
 
 
-echo "  Making make_env.sh"
-echo "\
-#!/bin/bash
-
-UID=`id -u`
-GID=`id -g`
-
-echo 'UID=\${UID}' >> .env
-echo 'GID=\${GID}' >> .env
-" > make_env.sh
-chmod 755 make_env.sh
+echo "  Making .env"
+echo "UID=$(id -u)" >> .env
+echo "GID=$(id -g)" >> .env
 
 
 echo "  Making reuirements.txt"
