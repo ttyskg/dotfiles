@@ -54,8 +54,8 @@ echo "\
 FROM python:3.10.4
 
 # specify user
-ARG UID=1000
-ARG GID=1000
+ARG UID=$(id -u)
+ARG GID=$(id -g)
 RUN groupadd -g \${GID} docker
 RUN useradd -u \${UID} -g \${GID} -s /bin/bash -m docker
 
@@ -83,4 +83,9 @@ echo "GID=$(id -g)" >> .env
 
 echo "  Making reuirements.txt"
 echo "\
+black
+mypy
+numpy
+pandas
+pylint
 " >> requirements.txt
