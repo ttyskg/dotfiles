@@ -152,6 +152,7 @@ alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
 alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
 alias start-ssh-agent='eval "$(ssh-agent -s)"'
+alias connect_gdrive='mount -t drvfs G: /mnt/g'
 
 # Prompt setting
 export PROMPT_DIRTRIM=1
@@ -175,4 +176,3 @@ export PATH=$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH
 
 # pipenv setting
 export PIPENV_VENV_IN_PROJECT="enabled"
-
