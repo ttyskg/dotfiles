@@ -152,7 +152,7 @@ alias tmux-changekey='tmux set-option -ag prefix C-b'
 alias tmux-revertkey='tmux set-option -ag prefix C-s'
 alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
 alias start-ssh-agent='eval "$(ssh-agent -s)"'
-alias connect_gdrive='mount -t drvfs G: /mnt/g'
+alias connect_gdrive='sudo mount -t drvfs G: /mnt/g'
 
 # Prompt setting
 export PROMPT_DIRTRIM=1
