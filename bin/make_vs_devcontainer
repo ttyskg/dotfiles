@@ -6,7 +6,7 @@
 #  |- docker-compose.yml
 #  |- Dockerfile
 #  |- .env
-#  |- requirements.txt 
+#  |- requirements.txt
 #  |_ requirements.r
 
 set -eu
@@ -23,14 +23,17 @@ echo '{
     "service": "dev",
     "workspaceFolder": "/tmp/work",
     "extensions": [
+        "eamodio.gitlens"
+        "DavidAnson.vscode-markdownlint",
+        "njpwerner.autodocstring",
+        "mechatroner.rainbow-csv",
         "ms-python.python",
         "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
         "ms-toolsai.jupyter-renderers",
-        "ms-toolsai.jupyter-keymap",
+        "shardulm94.trailing-spaces",
         "streetsidesoftware.code-spell-checker",
-        "mechatroner.rainbow-csv",
-        "eamodio.gitlens"
+        "usernamehw.errorlens"
     ]
 }' > devcontainer.json
 
@@ -51,7 +54,7 @@ services:
 
 echo "  Making Dockerfile"
 echo "\
-FROM python:3.10.4
+FROM python:3.10.6
 
 # specify user
 ARG UID=$(id -u)
@@ -70,7 +73,7 @@ WORKDIR /tmp/work
 COPY requirements.txt \${PWD}
 
 RUN python -m pip install --upgrade pip \\
-    && pip install -r requirements.txt 
+    && pip install -r requirements.txt
 
 # set non root user
 USER \${UID}" > Dockerfile

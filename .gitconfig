@@ -7,3 +7,5 @@
 	default = simple
 [alias]
 	lol = log --graph --decorate=full --pretty=oneline --all --abbrev-commit
+[http]
+	postBuffer = 209715200
