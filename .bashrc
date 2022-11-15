@@ -176,3 +176,7 @@ export PATH=$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH
 
 # pipenv setting
 export PIPENV_VENV_IN_PROJECT="enabled"
+
+# set Vim-style command-line editing
+set -o vi
+
