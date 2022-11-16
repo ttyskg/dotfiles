@@ -180,3 +180,5 @@ export PIPENV_VENV_IN_PROJECT="enabled"
 # set Vim-style command-line editing
 set -o vi
 
+# CDPATH setting
+export CDPATH=$HOME:$HOME/work
