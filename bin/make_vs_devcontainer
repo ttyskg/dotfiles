@@ -76,6 +76,8 @@ COPY requirements.txt \${PWD}
 RUN python -m pip install --upgrade pip \\
     && pip install -r requirements.txt
 
+RUN pylint --generate-rcfile > .pylintrc
+
 # set non root user
 USER \${UID}" > Dockerfile
 
