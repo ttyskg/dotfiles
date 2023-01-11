@@ -1,3 +1,8 @@
+# load bashrc
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
 # Start SSH agent automatically on login
 if [ -z "$SSH_AUTH_SOCK" ]; then
    # Check for a currently running instance of the agent
