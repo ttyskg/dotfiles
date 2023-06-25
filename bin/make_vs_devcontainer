@@ -23,10 +23,16 @@ echo '{
     "service": "dev",
     "workspaceFolder": "/tmp/work",
     "extensions": [
-        "eamodio.gitlens"
         "DavidAnson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "ionutvmi.path-autocomplete",
+        "jrebocho.vscode-random",
         "njpwerner.autodocstring",
+        "marp-team.marp-vscode",
         "mechatroner.rainbow-csv",
+        "ms-python.isort",
+        "ms-python.pylint",
         "ms-python.python",
         "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
@@ -44,7 +50,6 @@ version: '3.3'
 
 services:
   dev:
-    env_file: .env
     build: .
     stdin_open: true
     working_dir: '/tmp/work'
@@ -53,19 +58,21 @@ services:
 
 
 echo "  Making Dockerfile"
-echo "\
-FROM python:3.10.6
+echo '\
+FROM python:3.11.4
 
-# specify user
-ARG UID=$(id -u)
-ARG GID=$(id -g)
-RUN groupadd -g \${GID} docker
-RUN useradd -u \${UID} -g \${GID} -s /bin/bash -m docker
+# create non-root user
+RUN groupadd -r docker \
+    && useradd -r -g docker -s /bin/bash -m docker
 
-RUN apt-get update \\
-    && apt-get install -y \\
-    git \\
-    make \\
+# Install requried packages
+# Note: chromium is needed for creating pdf via marp. If you do not use marp
+#       you can skip installing chromium.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    git \
+    make \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup working directory
@@ -73,25 +80,25 @@ WORKDIR /tmp/work
 
 COPY requirements.txt \${PWD}
 
-RUN python -m pip install --upgrade pip \\
-    && pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \\
+    && pip install --no-cache-dir -r requirements.txt
 
 RUN pylint --generate-rcfile > .pylintrc
 
+ENV PYTHONPATH "${PYTHONPATH}:/tmp/work/mylib"
+
 # set non root user
-USER \${UID}" > Dockerfile
-
-
-echo "  Making .env"
-echo "UID=$(id -u)" >> .env
-echo "GID=$(id -g)" >> .env
+USER docker' > Dockerfile
 
 
 echo "  Making reuirements.txt"
 echo "\
 black
-flage8
+flake8
+matplotlib
 mypy
+numpy
+pandas
 pylint
 pytest
 pytest-flake8
@@ -99,5 +106,7 @@ pytest-mypy
 pytest-pylint
 rich
 tabulate
+tqdm
 yapf
 " >> requirements.txt
+
