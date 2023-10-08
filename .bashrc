@@ -182,3 +182,8 @@ set -o vi
 
 # CDPATH setting
 export CDPATH=$HOME:$HOME/work
+
+# For Loading the SSH key
+export HOST=$(hostname)
+/usr/bin/keychain -q --nogui $HOME/.ssh/id_ed25519
+source $HOME/.keychain/$HOST-sh
