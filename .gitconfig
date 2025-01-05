@@ -1,11 +1,14 @@
 [user]
-	name = tatsu
+	name = ttyskg
 	email = tatsu100311@gmail.com
 [core]
     editor = vim -c \"set fenc=utf-8\"
 [push]
 	default = simple
+[fetch]
+    prune = true
 [alias]
 	lol = log --graph --decorate=full --pretty=oneline --all --abbrev-commit
+    fixit = commit --amend --no-edit
 [http]
 	postBuffer = 209715200
