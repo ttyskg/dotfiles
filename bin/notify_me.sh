@@ -4,8 +4,8 @@
 TO="tatsu100311@gmail.com"
 
 # Default values
-SUBJECT="Notification from $HOSTNAME"
-BODY="This is an automated message from $HOSTNAME."
+SUBJECT="Notification from $(hostname)"
+BODY="This is an automated message from $(hostname)."
 
 # Help message
 show_help() {
