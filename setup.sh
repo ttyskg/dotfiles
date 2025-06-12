@@ -14,6 +14,10 @@ for f in .??*; do
   [[ $f == .gitignore ]] && continue
   [[ $f == .gitmodules ]] && continue
 
+  # Copy file instead of symlink. They could contain sensitive information.
+  # Therefore, they will be modified after copying to HOME.
+  [[ $f == .msmtprc ]] && cp -v ~/dotfiles/"$f" ~/
+
   # Make symbolic links of dotfile to HOME
   ln -snfv ~/dotfiles/"$f" ~/
 done
