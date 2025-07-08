@@ -13,7 +13,3 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
    fi
    eval `cat .ssh/ssh-agent`
 fi
-
-# Start at home directory
-cd
-
