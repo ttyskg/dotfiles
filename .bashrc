@@ -184,9 +184,11 @@ set -o vi
 export CDPATH=$HOME:$HOME/work
 
 # For Loading the SSH key
-export HOST=$(hostname)
-/usr/bin/keychain -q --nogui $HOME/.ssh/id_ed25519
-source $HOME/.keychain/$HOST-sh
+if command -v keychain &> /dev/null; then
+    export HOST=$(hostname)
+    /usr/bin/keychain -q --nogui $HOME/.ssh/id_ed25519
+    source $HOME/.keychain/$HOST-sh
+fi
 
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
