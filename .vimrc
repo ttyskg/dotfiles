@@ -10,7 +10,7 @@ let g:indentLine_faster = 1
 let g:indentLine_color_term = 10
 
 "# Setting for NERDTree
-map <C-n> :NERDTreeToggle<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
 
 "# Setting for lightline.vim
 set laststatus=2
@@ -25,38 +25,39 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="tabdo"
 
 "##### File Setting #####
-set fenc=utf-8
 set encoding=utf-8
 set fileencoding=utf-8
-set fileencodings=usc-boms,utf-8,euc-jp,cp932
+set fileencodings=ucs-bom,utf-8,euc-jp,cp932
 set nobackup
 set noswapfile
 set autoread
 set showcmd
 
-"##### Dispray Setting #####
+"##### Display Setting #####
 set number
 "set cursorline
 "set cursorcolumn
 set title
 set showmatch
 set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set autoindent
 set smartindent
 set visualbell t_vb=
 set expandtab
-set nrformats=
 "let &colorcolumn=join(range(80,80),",")
 "Background transparency settings
 highlight Normal ctermbg=NONE guibg=NONE
 highlight NonText ctermbg=NONE guibg=NONE
 highlight LineNr ctermbg=NONE guibg=NONE
 highlight Folded ctermbg=NONE guibg=NONE
-highlight SpeciaKey ctermbg=NONE guibg=NONE
+highlight SpecialKey ctermbg=NONE guibg=NONE
 highlight EndOfBuffer ctermbg=NONE guibg=NONE
 
 augroup CursorLineOnlyInActiveWindow
   autocmd!
-  autocmd VimEnter,WinEnter,BufWinENter * setlocal cursorline
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
   autocmd WinLeave * setlocal nocursorline
 augroup END
 

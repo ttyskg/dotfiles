@@ -1,0 +1,15 @@
+# Local machine-specific shell settings.
+# Copy this file to ~/.bash_local and edit values for each device.
+# This file is intended to stay in Git as a template only.
+
+# Email recipient for bin/notify_me.sh
+# export NOTIFY_EMAIL="your_email@example.com"
+
+# Optional: extra PATH entries for this machine only.
+# export PATH="$HOME/.cargo/bin:$PATH"
+
+# Optional: per-machine aliases.
+# alias work='cd "$HOME/work"'
+
+# Optional: machine-specific environment variables.
+# export PROJECT_ROOT="$HOME/work/myproject"

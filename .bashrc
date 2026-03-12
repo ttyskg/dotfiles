@@ -73,16 +73,23 @@ xterm*|rxvt*)
 esac
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+if [ -r ~/.dircolors ]; then
+    if command -v dircolors > /dev/null 2>&1; then
+        eval "$(dircolors -b ~/.dircolors)"
+    elif command -v gdircolors > /dev/null 2>&1; then
+        eval "$(gdircolors -b ~/.dircolors)"
+    fi
+elif command -v dircolors > /dev/null 2>&1; then
+    eval "$(dircolors -b)"
 fi
+
+alias ls='ls --color=auto'
+#alias dir='dir --color=auto'
+#alias vdir='vdir --color=auto'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -101,7 +108,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
+if [ -f ~/.bash_aliases ] && [ -O ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
@@ -119,20 +126,19 @@ fi
 # change file/directory permission to Linux default.
 umask 022
 
-# Setting LS_COLORS as Sorarized
-if [ -f ~/.dircolors ]; then
-    if type dircolors > /dev/null 2>&1; then
-        eval $(dircolors ~/.dircolors)
-    elif type gdircolors > /dev/null 2>&1; then
-        eval $(gdircolors ~/.dircolors)
+# X server setting for WSL
+if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
+    if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] && [ -r /etc/resolv.conf ]; then
+        WSL_HOST_IP=$(awk '/^nameserver / {print $2; exit}' /etc/resolv.conf)
+        if [ -n "$WSL_HOST_IP" ]; then
+            export DISPLAY="${WSL_HOST_IP}:0.0"
+        fi
+        unset WSL_HOST_IP
     fi
-fi
 
-# X server setting
-DISTRO=$(cat /etc/*release | grep ^NAME= | awk -F '[=]' '{print $2}')
-if [ ! "$DISTRO" = "\"Pengwin\"" ]; then
-    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
-    export LIBGL_ALWAYS_INDIRECT=1
+    if [ -z "${WAYLAND_DISPLAY:-}" ]; then
+        export LIBGL_ALWAYS_INDIRECT=1
+    fi
 fi
 
 # my alias
@@ -157,8 +163,13 @@ alias connect_gdrive='sudo mount -t drvfs G: /mnt/g -o metadata'
 # Prompt setting
 export PROMPT_DIRTRIM=1
 function parse_git_branch {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-   }
+    local branch
+    branch=$(git branch --show-current 2> /dev/null)
+    if [ -z "$branch" ]; then
+        branch=$(git rev-parse --short HEAD 2> /dev/null)
+    fi
+    [ -n "$branch" ] && printf '(%s)' "$branch"
+}
 export PS1="\[\e[01;32m\]\u@\h\[\e[01;00m\]:\[\e[01;32m\]\w \t\[\e[01;35m\]\$(parse_git_branch)\[\e[m\]\$ "
 
 # User specific functions
@@ -168,11 +179,17 @@ if [[ -t 0 ]]; then
 fi
 
 # NodeBrew setting
-export PATH=$HOME/.nodebrew/current/bin:$PATH
+if [ -d "$HOME/.nodebrew/current/bin" ]; then
+    export PATH="$HOME/.nodebrew/current/bin:$PATH"
+fi
 
 # Bioinformatic tools
-export PATH=$HOME/bin/samtools/bin:$PATH
-export PATH=$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH
+if [ -d "$HOME/bin/samtools/bin" ]; then
+    export PATH="$HOME/bin/samtools/bin:$PATH"
+fi
+if [ -d "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin" ]; then
+    export PATH="$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH"
+fi
 
 # pipenv setting
 export PIPENV_VENV_IN_PROJECT="enabled"
@@ -191,13 +208,16 @@ if shopt -q login_shell; then
         if [ -f "$HOME/.keychain/$HOST-sh" ]; then
             source "$HOME/.keychain/$HOST-sh"
         fi
-    elif [ -z "$SSH_AUTH_SOCK" ]; then
-        RUNNING_AGENT=$(ps -u "$USER" -o args= | grep '^ssh-agent -s$' | wc -l | tr -d '[:space:]')
-        if [ "$RUNNING_AGENT" = "0" ]; then
-            ssh-agent -s > "$HOME/.ssh/ssh-agent"
-        fi
+    elif [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
         if [ -f "$HOME/.ssh/ssh-agent" ]; then
-            eval "$(cat "$HOME/.ssh/ssh-agent")"
+            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1 || true
+        fi
+
+        if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
+            mkdir -p "$HOME/.ssh"
+            ssh-agent -s | sed '/^echo /d' > "$HOME/.ssh/ssh-agent"
+            chmod 600 "$HOME/.ssh/ssh-agent"
+            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1
         fi
     fi
 fi
@@ -206,6 +226,6 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 # Load local machine-specific settings (not tracked in Git)
-if [ -f ~/.bash_local ]; then
+if [ -f ~/.bash_local ] && [ -O ~/.bash_local ]; then
     . ~/.bash_local
 fi

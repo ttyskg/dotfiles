@@ -2,7 +2,7 @@
 	name = ttyskg
 	email = tatsu100311@gmail.com
 [core]
-    editor = vim -c \"set fenc=utf-8\"
+	editor = vim -c "set fenc=utf-8"
 [push]
 	default = simple
 [fetch]
@@ -10,5 +10,7 @@
 [alias]
 	lol = log --graph --decorate=full --pretty=oneline --all --abbrev-commit
     fixit = commit --amend --no-edit
+	st = status -sb
+	last = log -1 --stat
 [http]
 	postBuffer = 209715200
