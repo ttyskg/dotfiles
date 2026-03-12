@@ -202,11 +202,11 @@ export CDPATH=$HOME:$HOME/work
 
 # For Loading the SSH key
 if shopt -q login_shell; then
-    export HOST=$(hostname)
-    if [ -x /usr/bin/keychain ]; then
-        /usr/bin/keychain -q --nogui "$HOME/.ssh/id_ed25519"
+    HOST=$(hostname)
+    if command -v keychain > /dev/null 2>&1; then
+        keychain -q --nogui "$HOME/.ssh/id_ed25519"
         if [ -f "$HOME/.keychain/$HOST-sh" ]; then
-            source "$HOME/.keychain/$HOST-sh"
+            . "$HOME/.keychain/$HOST-sh"
         fi
     elif [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
         if [ -f "$HOME/.ssh/ssh-agent" ]; then
