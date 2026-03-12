@@ -184,9 +184,28 @@ set -o vi
 export CDPATH=$HOME:$HOME/work
 
 # For Loading the SSH key
-export HOST=$(hostname)
-/usr/bin/keychain -q --nogui $HOME/.ssh/id_ed25519
-source $HOME/.keychain/$HOST-sh
+if shopt -q login_shell; then
+    export HOST=$(hostname)
+    if [ -x /usr/bin/keychain ]; then
+        /usr/bin/keychain -q --nogui "$HOME/.ssh/id_ed25519"
+        if [ -f "$HOME/.keychain/$HOST-sh" ]; then
+            source "$HOME/.keychain/$HOST-sh"
+        fi
+    elif [ -z "$SSH_AUTH_SOCK" ]; then
+        RUNNING_AGENT=$(ps -u "$USER" -o args= | grep '^ssh-agent -s$' | wc -l | tr -d '[:space:]')
+        if [ "$RUNNING_AGENT" = "0" ]; then
+            ssh-agent -s > "$HOME/.ssh/ssh-agent"
+        fi
+        if [ -f "$HOME/.ssh/ssh-agent" ]; then
+            eval "$(cat "$HOME/.ssh/ssh-agent")"
+        fi
+    fi
+fi
 
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+# Load local machine-specific settings (not tracked in Git)
+if [ -f ~/.bash_local ]; then
+    . ~/.bash_local
+fi
