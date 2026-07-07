@@ -178,17 +178,24 @@ if [[ -t 0 ]]; then
     stty start undef
 fi
 
+path_prepend() {
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) export PATH="$1:$PATH" ;;
+    esac
+}
+
 # NodeBrew setting
 if [ -d "$HOME/.nodebrew/current/bin" ]; then
-    export PATH="$HOME/.nodebrew/current/bin:$PATH"
+    path_prepend "$HOME/.nodebrew/current/bin"
 fi
 
 # Bioinformatic tools
 if [ -d "$HOME/bin/samtools/bin" ]; then
-    export PATH="$HOME/bin/samtools/bin:$PATH"
+    path_prepend "$HOME/bin/samtools/bin"
 fi
 if [ -d "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin" ]; then
-    export PATH="$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin:$PATH"
+    path_prepend "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin"
 fi
 
 # pipenv setting
@@ -223,7 +230,7 @@ if shopt -q login_shell; then
 fi
 
 # Add local bin to PATH
-export PATH="$HOME/.local/bin:$PATH"
+path_prepend "$HOME/.local/bin"
 
 # Load local machine-specific settings (not tracked in Git)
 if [ -f ~/.bash_local ] && [ -O ~/.bash_local ]; then

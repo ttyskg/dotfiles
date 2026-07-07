@@ -70,11 +70,15 @@ for f in .??*; do
   run_cmd ln -snfv "$THIS_DIR/$f" "$HOME/$f"
 done
 
-run_cmd mkdir -p "$HOME/bin"
+# Make symbolic links of bin/* to $HOME/.local/bin
+run_cmd mkdir -p "$HOME/.local/bin"
 
 for f in bin/*; do
   [[ "$f" == *.example ]] && continue
-  run_cmd ln -snfv "$THIS_DIR/$f" "$HOME/bin/$(basename "$f")"
+  bin_name="$(basename "$f")"
+  bin_name="${bin_name%.sh}"
+  bin_name="${bin_name%.py}"
+  run_cmd ln -snfv "$THIS_DIR/$f" "$HOME/.local/bin/$bin_name"
 done
 
 echo "finished!"

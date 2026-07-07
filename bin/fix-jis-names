@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+fix-jis-names - 文字化けした日本語ファイル名を復元するコマンド
+
+日本語版 Windows で作成された ZIP を、CP437 と誤解釈して解凍したときに
+発生する文字化け(例: 参考資料 -> ÄQìlÄæù┐)を元の名前へ戻します。
+変換ロジック: name.encode('cp437').decode('cp932')
+
+使い方:
+    fix-jis-names                 # カレントディレクトリを確認(ドライラン)
+    fix-jis-names --apply         # 実際にリネーム
+    fix-jis-names -r DIR --apply  # DIR 以下を再帰的にリネーム
+    fix-jis-names file1 file2     # 特定ファイルだけ対象にする
+"""
+
+import argparse
+import os
+import sys
+
+# 文字化け前バイト列の復元に使う候補(先に成功したものを採用)
+DECODERS = ("cp932", "shift_jis")
+
+
+def restore(name: str) -> str | None:
+    """文字化け名を元の名前に戻す。復元不要/不能なら None を返す。"""
+    try:
+        raw = name.encode("cp437")
+    except UnicodeEncodeError:
+        return None  # cp437 で表せない = この化けパターンではない
+    for dec in DECODERS:
+        try:
+            fixed = raw.decode(dec)
+        except UnicodeDecodeError:
+            continue
+        # 変化がない、または制御文字が混じる場合は無効とみなす
+        if fixed != name and not any(ord(c) < 0x20 for c in fixed):
+            return fixed
+    return None
+
+
+def iter_targets(paths, recursive):
+    """処理対象のディレクトリエントリを (親ディレクトリ, 名前) で列挙する。
+
+    深い階層から先に返すことで、親をリネームする前に子を処理できる。
+    """
+    for p in paths:
+        if os.path.isdir(p) and recursive:
+            for root, dirs, files in os.walk(p, topdown=False):
+                for n in files + dirs:
+                    yield root, n
+        elif os.path.isdir(p):
+            for n in sorted(os.listdir(p)):
+                yield p, n
+        else:
+            parent, n = os.path.split(p.rstrip("/"))
+            yield parent or ".", n
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(
+        description="CP437 と誤解釈されて文字化けした日本語ファイル名を復元します。"
+    )
+    ap.add_argument(
+        "paths",
+        nargs="*",
+        default=["."],
+        help="対象ファイル/ディレクトリ(省略時はカレントディレクトリ)",
+    )
+    ap.add_argument(
+        "-r",
+        "--recursive",
+        action="store_true",
+        help="ディレクトリを再帰的に処理する",
+    )
+    ap.add_argument(
+        "--apply",
+        action="store_true",
+        help="実際にリネームする(未指定時は確認のみのドライラン)",
+    )
+    args = ap.parse_args()
+
+    renamed = skipped = collided = 0
+
+    for parent, name in iter_targets(args.paths, args.recursive):
+        fixed = restore(name)
+        if fixed is None:
+            continue
+
+        src = os.path.join(parent, name)
+        dst = os.path.join(parent, fixed)
+
+        if os.path.exists(dst):
+            print(f"[衝突] {name}  ->  {fixed}  (既に存在。スキップ)")
+            collided += 1
+            continue
+
+        if args.apply:
+            try:
+                os.rename(src, dst)
+            except OSError as e:
+                print(f"[失敗] {name}: {e}")
+                skipped += 1
+                continue
+            print(f"[変更] {name}  ->  {fixed}")
+        else:
+            print(f"[予定] {name}  ->  {fixed}")
+        renamed += 1
+
+    print("-" * 40)
+    if args.apply:
+        print(f"リネーム完了: {renamed} 件 / 衝突: {collided} 件 / 失敗: {skipped} 件")
+    else:
+        print(f"復元対象: {renamed} 件 / 衝突: {collided} 件")
+        if renamed:
+            print("実際にリネームするには --apply を付けて再実行してください。")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
