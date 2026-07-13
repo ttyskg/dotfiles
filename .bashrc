@@ -233,6 +233,6 @@ fi
 path_prepend "$HOME/.local/bin"
 
 # Load local machine-specific settings (not tracked in Git)
-if [ -f ~/.bash_local ] && [ -O ~/.bash_local ]; then
-    . ~/.bash_local
+if [ -f ~/.bashrc.local ] && [ -O ~/.bashrc.local ]; then
+    . ~/.bashrc.local
 fi
