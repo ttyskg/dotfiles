@@ -83,31 +83,13 @@ elif command -v dircolors > /dev/null 2>&1; then
     eval "$(dircolors -b)"
 fi
 
-alias ls='ls --color=auto'
-#alias dir='dir --color=auto'
-#alias vdir='vdir --color=auto'
-
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ] && [ -O ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -141,24 +123,6 @@ if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
     fi
 fi
 
-# my alias
-alias ..='cd ..'
-alias cb='~/bin/clipboard.sh'
-alias cbx='~/bin/clipboard_xclip.sh'
-alias ga='git add'
-alias gaa='git add -A'
-alias gb='git branch'
-alias gc='git commit'
-alias gca='git commit --amend --no-edit'
-alias gcm='git commit -m'
-alias go='git checkout'
-alias gs='git status'
-alias python='python3'
-alias tmux-changekey='tmux set-option -ag prefix C-b'
-alias tmux-revertkey='tmux set-option -ag prefix C-s'
-alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
-alias start-ssh-agent='eval "$(ssh-agent -s)"'
-alias connect_gdrive='sudo mount -t drvfs G: /mnt/g -o metadata'
 
 # Prompt setting
 export PROMPT_DIRTRIM=1
