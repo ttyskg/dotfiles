@@ -58,7 +58,7 @@ if ! command -v msmtp >/dev/null 2>&1; then
 fi
 
 if [[ -z "$TO" ]]; then
-  echo "NOTIFY_EMAIL is not set. Configure it in ~/.bash_local." >&2
+  echo "NOTIFY_EMAIL is not set. Configure it in ~/.bashrc.local." >&2
   exit 1
 fi
 

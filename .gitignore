@@ -2,4 +2,4 @@
 .netrwhist
 
 # local machine-specific shell settings
-.bash_local
+.bashrc.local

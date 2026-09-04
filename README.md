@@ -4,30 +4,34 @@ This is my backup of my dotfiles.
 
 ## Bash startup files
 
-- `.bashrc` contains shared interactive shell settings and is tracked in this repository.
+- `.bashrc` is tracked here and is split into two parts:
+  - settings for **every** shell (PATH, exported variables, `umask`), and
+  - settings for **interactive** shells only (history, prompt, aliases,
+    completion, `set -o vi`, `CDPATH`, keychain).
 - `.bash_profile` stays minimal and only loads `.bashrc` for login shells.
-- `.bash_local` is optional for machine-specific settings and is not tracked by Git.
+- `.bashrc.local` is optional for machine-specific settings and is not tracked
+  by Git.
 
 Load order on login shells:
 
 1. `.bash_profile`
 2. `.bashrc`
-3. `.bash_local` (if present)
+3. `.bashrc.local` (if present)
 
 ## Local secrets
 
 - `.msmtprc` is copied to `~/` by `setup.sh` (not symlinked), so each device can keep its own password config.
 - Add a password command in local `~/.msmtprc` (example: `passwordeval "pass show mail/gmail_app_password"`).
-- Set `NOTIFY_EMAIL` in `~/.bash_local` for `bin/notify_me.sh`.
-- Start from `.bash_local.example` in this repository for first-time setup.
+- Set `NOTIFY_EMAIL` in `~/.bashrc.local` for `bin/notify_me.sh`.
+- Start from `.bashrc.local.example` in this repository for first-time setup.
 
-First-time setup:
+First-time setup (from the repository root):
 
 ```bash
-cp ~/.bash_local.example ~/.bash_local
+cp .bashrc.local.example ~/.bashrc.local
 ```
 
-Then edit `~/.bash_local` as needed.
+Then edit `~/.bashrc.local` as needed.
 
 Example:
 
@@ -43,7 +47,7 @@ export NOTIFY_EMAIL="your_email@example.com"
 
 ## Runtime notes
 
-- `.bashrc` now sets `DISPLAY` only when running in WSL.
+- `.bashrc` sets `DISPLAY` only when running in WSL.
 - SSH agent fallback restores from `~/.ssh/ssh-agent` and re-creates it only when needed.
 - PATH entries for optional tools are added only when directories exist.
 

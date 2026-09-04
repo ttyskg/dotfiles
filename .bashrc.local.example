@@ -1,6 +1,11 @@
 # Local machine-specific shell settings.
-# Copy this file to ~/.bash_local and edit values for each device.
+# Copy this file to ~/.bashrc.local and edit values for each device.
 # This file is intended to stay in Git as a template only.
+#
+# ~/.bashrc sources it for every shell, interactive or not, so PATH entries
+# set here are also visible to `ssh host command`, cron jobs and CLI agents.
+# Keep interactive-only settings (prompt tweaks, stty, ...) guarded, e.g.:
+#     case $- in *i*) PS1="..." ;; esac
 
 # Email recipient for bin/notify_me.sh
 # export NOTIFY_EMAIL="your_email@example.com"
