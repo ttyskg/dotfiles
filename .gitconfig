@@ -1,16 +1,52 @@
 [user]
 	name = ttyskg
 	email = tatsu100311@gmail.com
+
 [core]
-	editor = vim -c "set fenc=utf-8"
+	# .vimrc already forces utf-8, so the -c "set fenc=utf-8" is redundant.
+	editor = vim
+
+[init]
+	defaultBranch = main
+
 [push]
 	default = simple
+	# Create the upstream branch on the first push instead of failing.
+	autoSetupRemote = true
+
+[pull]
+	# Refuse to invent a merge commit when the branches have diverged.
+	# Reconcile explicitly with `git pull --rebase` or `git merge`.
+	ff = only
+
 [fetch]
-    prune = true
+	prune = true
+	pruneTags = true
+
+[diff]
+	# Produces far more readable diffs than the default Myers algorithm
+	# when code moves around.
+	algorithm = histogram
+
+[merge]
+	# Show the common ancestor in conflict markers, not just both sides.
+	conflictstyle = diff3
+
+[rebase]
+	autosquash = true
+	autostash = true
+
+[rerere]
+	# Remember how a conflict was resolved and replay it next time.
+	enabled = true
+	autoupdate = true
+
+[branch]
+	# `git branch` lists the most recently worked on first.
+	sort = -committerdate
+
 [alias]
 	lol = log --graph --decorate=full --pretty=oneline --all --abbrev-commit
-    fixit = commit --amend --no-edit
+	fixit = commit --amend --no-edit
 	st = status -sb
 	last = log -1 --stat
-[http]
-	postBuffer = 209715200
