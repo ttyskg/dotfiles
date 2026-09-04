@@ -31,9 +31,11 @@ alias gs='git status'
 
 
 # tmux
-alias tmux-changekey='tmux set-option -ag prefix C-b'
-alias tmux-revertkey='tmux set-option -ag prefix C-s'
-alias tmux-sw='tmux split-window -v -p 20;tmux split-window -h -p 66;tmux split-window -h -p 50'
+# revertkey restores the prefix set in .tmux.conf, which is C-a (it used to
+# say C-s and so never restored anything). -p is deprecated in favour of -l.
+alias tmux-changekey='tmux set-option -g prefix C-b'
+alias tmux-revertkey='tmux set-option -g prefix C-a'
+alias tmux-sw='tmux split-window -v -l 20%;tmux split-window -h -l 66%;tmux split-window -h -l 50%'
 
 
 #ssh
@@ -41,7 +43,10 @@ alias start-ssh-agent='eval "$(ssh-agent -s)"'
 
 
 # python
-alias python='python3'
+# Debian ships no `python` binary. Alias it only when nothing else provides
+# one, so a virtualenv or conda environment with its own `python` is never
+# shadowed by an alias.
+command -v python > /dev/null 2>&1 || alias python='python3'
 
 
 # Claude-Science
@@ -50,8 +55,10 @@ alias css='claude-science serve --port 8765 --no-browser'
 
 
 # my alias
-alias cb='~/bin/clipboard.sh'
-alias cbx='~/bin/clipboard_xclip.sh'
+# These pointed at ~/bin/, which does not exist: setup.sh installs to
+# ~/.local/bin, and that is on PATH.
+alias cb='clipboard'
+alias cbx='clipboard -x'
 
 
 # others
