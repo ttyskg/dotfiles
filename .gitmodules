@@ -1,7 +1,3 @@
-[submodule ".fonts/source-code-pro"]
-	path = .fonts/source-code-pro
-	url = https://github.com/adobe-fonts/source-code-pro.git
-	branch = release
 [submodule ".vim/pack/mypack/start/nerdtree"]
 	path = .vim/pack/mypack/start/nerdtree
 	url = git@github.com:scrooloose/nerdtree.git
