@@ -34,13 +34,13 @@ handle quick viewing and small edits in a terminal. `.vimrc` sources Vim's own
 
 Also worth knowing:
 
-- Persistent undo lives in `~/.cache/vim/undo`, deliberately outside this
-  repository (`~/.vim` is a symlink into it).
+- Persistent undo lives in `~/.cache/vim/undo`.
 - `\y` copies the visual selection, or in normal mode the whole buffer,
   through `clip.exe` or `xclip`. The Debian `vim` package is built without
   `+clipboard`, so yanks cannot reach the system clipboard on their own.
 - The mouse is off, so dragging still selects text at the terminal level.
-- `.vim/UltiSnips/python.snippets` is a leftover from UltiSnips and is unused.
+- `.vimrc` is the only Vim file here. `~/.vim` belongs to Vim itself and is no
+  longer symlinked into this repository.
 
 ## Local secrets
 

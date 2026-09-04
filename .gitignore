@@ -1,5 +1,2 @@
-# vim cache
-.netrwhist
-
 # local machine-specific shell settings
 .bashrc.local

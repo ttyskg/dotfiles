@@ -31,8 +31,8 @@ set nowritebackup
 set noswapfile
 
 " Persistent undo: 'noswapfile' plus no undofile means every close throws the
-" history away. ~/.vim is a symlink into the dotfiles repository, so keep the
-" undo files outside of it.
+" history away. Kept under ~/.cache rather than ~/.vim, which is Vim's own
+" directory and nothing this repository manages.
 if has('persistent_undo')
   let s:undodir = expand('~/.cache/vim/undo')
   if !isdirectory(s:undodir)
