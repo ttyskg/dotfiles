@@ -18,6 +18,30 @@ Load order on login shells:
 2. `.bashrc`
 3. `.bashrc.local` (if present)
 
+## Vim
+
+Plugin-free on purpose: VS Code does the multi-file editing, Vim only has to
+handle quick viewing and small edits in a terminal. `.vimrc` sources Vim's own
+`defaults.vim` and adds, in place of the plugins that used to live here:
+
+| was | now |
+| --- | --- |
+| NERDTree | netrw in tree mode, still toggled with `Ctrl-N` |
+| indentLine | indent guides via `listchars` `leadmultispace` |
+| lightline.vim | a hand-written `statusline` |
+| vim-colors-solarized | `habamax`, bundled with Vim 9 |
+| UltiSnips | nothing |
+
+Also worth knowing:
+
+- Persistent undo lives in `~/.cache/vim/undo`, deliberately outside this
+  repository (`~/.vim` is a symlink into it).
+- `\y` copies the visual selection, or in normal mode the whole buffer,
+  through `clip.exe` or `xclip`. The Debian `vim` package is built without
+  `+clipboard`, so yanks cannot reach the system clipboard on their own.
+- The mouse is off, so dragging still selects text at the terminal level.
+- `.vim/UltiSnips/python.snippets` is a leftover from UltiSnips and is unused.
+
 ## Local secrets
 
 - `.msmtprc` is copied to `~/` by `setup.sh` (not symlinked), so each device can keep its own password config.
