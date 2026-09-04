@@ -63,11 +63,28 @@ Example:
 export NOTIFY_EMAIL="your_email@example.com"
 ```
 
+## tmux
+
+- The prefix is `C-a`; `|` and `-` split, `h`/`j`/`k`/`l` move between panes and
+  `H`/`J`/`K`/`L` resize them, `r` reloads the config.
+- Copy mode uses vi keys: `v` selects, `C-v` toggles a rectangle, `y` copies.
+  On WSL `y` and mouse-drag also put the text on the Windows clipboard.
+- `default-terminal` is `tmux-256color` and `terminal-overrides` carries `Tc`,
+  so 24-bit colour reaches programs inside panes. `COLORTERM` is forwarded from
+  the attaching client, which is how Vim decides to switch `termguicolors` on.
+
 ## Utilities
 
-- `bin/wsl_port_forward.sh [port]` now validates WSL usage and defaults to port `2222`.
-- `bin/clipboard.sh <file>` validates file and `clip.exe` before copying.
-- `bin/clipboard_xclip.sh <file>` validates file and `xclip` before copying.
+Installed by `setup.sh` into `~/.local/bin`, with any `.sh`/`.py` suffix
+stripped:
+
+| command | what it does |
+| --- | --- |
+| `clipboard [-x] [FILE]` | Copy a file or stdin to the clipboard: `clip.exe`, `wl-copy`, `xclip` or `xsel`, first one found. `-x` skips `clip.exe`. Aliased to `cb` / `cbx`. |
+| `wsl_port_forward [PORT]` | Forward `localhost:PORT` on Windows to this WSL instance. Defaults to `2222`. |
+| `notify_me [-s SUBJECT] [-b BODY]` | Send mail through `msmtp` to `$NOTIFY_EMAIL`. |
+| `fix-jis-names [-r] [--apply] [PATH...]` | Restore Japanese filenames mangled by a CP437 misread. Dry run unless `--apply`. |
+| `make_vs_devcontainer [--force]` | Write a `.devcontainer/` (Python image, Compose, ruff/mypy/pytest) into the current directory. |
 
 ## Runtime notes
 
@@ -78,6 +95,11 @@ export NOTIFY_EMAIL="your_email@example.com"
   sourcing anything by hand. `~/.keychain/<host>-sh` takes precedence over the
   older `~/.ssh/ssh-agent`, and a socket that no longer exists is discarded.
 - PATH entries for optional tools are added only when directories exist.
+- `.dircolors` is the `dircolors.ansi-dark` theme vendored from
+  seebi/dircolors-solarized.
+- `.gitconfig` sets `pull.ff = only`, so a diverged `git pull` stops rather
+  than creating a merge commit; reconcile with `git pull --rebase` or
+  `git merge`. New repositories get `main` as the default branch.
 
 ## Setup script
 
