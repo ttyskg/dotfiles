@@ -1,3 +1,6 @@
+# Vendored from https://github.com/seebi/dircolors-solarized
+# (the dircolors.ansi-dark theme; nothing else from that repository is used).
+#
 # Exact Solarized Dark color theme for the color GNU ls utility.
 # Designed for dircolors (GNU coreutils) 5.97
 #
