@@ -48,7 +48,11 @@ export NOTIFY_EMAIL="your_email@example.com"
 ## Runtime notes
 
 - `.bashrc` sets `DISPLAY` only when running in WSL.
-- SSH agent fallback restores from `~/.ssh/ssh-agent` and re-creates it only when needed.
+- SSH agent: login shells start it (`keychain`, or a plain `ssh-agent` fallback).
+  *Every* shell, non-interactive ones included, then adopts an agent that is
+  already running, so `git push` works from scripts and CLI agents without
+  sourcing anything by hand. `~/.keychain/<host>-sh` takes precedence over the
+  older `~/.ssh/ssh-agent`, and a socket that no longer exists is discarded.
 - PATH entries for optional tools are added only when directories exist.
 
 ## Setup script

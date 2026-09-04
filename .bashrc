@@ -60,6 +60,50 @@ if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
     fi
 fi
 
+# SSH agent
+#
+# Starting an agent is a login-shell job: keychain may prompt for the key
+# passphrase and the fallback spawns a process. Adopting an agent that is
+# already running is not, so that part runs in every shell -- otherwise
+# non-login shells (CLI agents, `ssh host command`, editors) get no
+# SSH_AUTH_SOCK and any git push fails with "Permission denied (publickey)".
+if shopt -q login_shell; then
+    if command -v keychain > /dev/null 2>&1; then
+        keychain -q --nogui "$HOME/.ssh/id_ed25519"
+    elif [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
+        if [ -f "$HOME/.ssh/ssh-agent" ]; then
+            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1 || true
+        fi
+
+        if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
+            mkdir -p "$HOME/.ssh"
+            ssh-agent -s | sed '/^echo /d' > "$HOME/.ssh/ssh-agent"
+            chmod 600 "$HOME/.ssh/ssh-agent"
+            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1
+        fi
+    fi
+fi
+
+# Adopt an agent that is already running. keychain first: ~/.ssh/ssh-agent is
+# the older fallback and can point at a socket that no longer exists.
+for ssh_agent_env in \
+        "$HOME/.keychain/${HOSTNAME:-$(hostname)}-sh" \
+        "$HOME/.ssh/ssh-agent"; do
+    [ -S "${SSH_AUTH_SOCK:-}" ] && break
+    # Drop the rejected pair so a dead file cannot leave its SSH_AGENT_PID
+    # attached to the socket of the next one.
+    unset SSH_AUTH_SOCK SSH_AGENT_PID
+    if [ -f "$ssh_agent_env" ]; then
+        . "$ssh_agent_env" > /dev/null 2>&1 || true
+    fi
+done
+unset ssh_agent_env
+
+# Never keep a stale socket: no agent is better than a broken one.
+if [ -n "${SSH_AUTH_SOCK:-}" ] && [ ! -S "$SSH_AUTH_SOCK" ]; then
+    unset SSH_AUTH_SOCK SSH_AGENT_PID
+fi
+
 # Load local machine-specific settings (not tracked in Git)
 if [ -f ~/.bashrc.local ] && [ -O ~/.bashrc.local ]; then
     . ~/.bashrc.local
@@ -170,25 +214,3 @@ set -o vi
 
 # CDPATH setting
 export CDPATH=$HOME:$HOME/work
-
-# For Loading the SSH key
-if shopt -q login_shell; then
-    HOST=$(hostname)
-    if command -v keychain > /dev/null 2>&1; then
-        keychain -q --nogui "$HOME/.ssh/id_ed25519"
-        if [ -f "$HOME/.keychain/$HOST-sh" ]; then
-            . "$HOME/.keychain/$HOST-sh"
-        fi
-    elif [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
-        if [ -f "$HOME/.ssh/ssh-agent" ]; then
-            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1 || true
-        fi
-
-        if [ -z "${SSH_AUTH_SOCK:-}" ] || [ ! -S "${SSH_AUTH_SOCK:-}" ]; then
-            mkdir -p "$HOME/.ssh"
-            ssh-agent -s | sed '/^echo /d' > "$HOME/.ssh/ssh-agent"
-            chmod 600 "$HOME/.ssh/ssh-agent"
-            . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1
-        fi
-    fi
-fi
