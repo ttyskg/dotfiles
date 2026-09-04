@@ -53,6 +53,9 @@ for f in .??*; do
   [[ "$f" == .gitignore ]] && continue
   [[ "$f" == .gitmodules ]] && continue
   [[ "$f" == *.example ]] && continue
+  # .vscode here is the workspace setting for THIS repository.
+  # $HOME/.vscode is a real directory owned by VS Code itself, so never link it.
+  [[ "$f" == .vscode ]] && continue
 
   # Copy file instead of symlink. They could contain sensitive information.
   # Therefore, they will be modified after copying to HOME.
