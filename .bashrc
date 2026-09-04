@@ -200,3 +200,9 @@ path_prepend "$HOME/.local/bin"
 if [ -f ~/.bashrc.local ] && [ -O ~/.bashrc.local ]; then
     . ~/.bashrc.local
 fi
+
+# bun setting
+export BUN_INSTALL="$HOME/.bun"
+if [ -d "$BUN_INSTALL/bin" ]; then
+    path_prepend "$BUN_INSTALL/bin"
+fi
