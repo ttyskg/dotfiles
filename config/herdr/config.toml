@@ -1,0 +1,55 @@
+onboarding = false
+# herdr configuration. setup.sh symlinks this to ~/.config/herdr/config.toml.
+#
+# Only the settings that differ from herdr's own defaults are listed here.
+# `herdr --default-config` prints the full annotated default, `herdr config
+# check` validates this file, and prefix+shift+R (or `herdr server
+# reload-config`) reloads it into the running server.
+#
+# Nothing else in ~/.config/herdr belongs in this repository: the logs, the
+# sockets and session.json are runtime state, which is why setup.sh links this
+# file individually instead of the directory.
+
+[theme]
+# The outer terminal's own palette, which is also what .vimrc asks Vim for by
+# clearing Normal's background. Built-in alternatives: catppuccin, tokyo-night,
+# dracula, nord, gruvbox, one-dark, solarized, kanagawa, rose-pine, vesper,
+# plus their -latte/-day/-light/-lotus/-dawn light variants.
+name = "terminal"
+
+[theme.custom]
+# Let the terminal background show through the panes, matching the
+# TransparentBackground autocmd group in .vimrc.
+panel_bg = "reset"
+
+[keys]
+# Ctrl-a as in .tmux.conf, not herdr's own Ctrl-b. Pressing the prefix twice
+# sends a literal Ctrl-a to the pane, which is what tmux's send-prefix bind did.
+prefix = "ctrl+a"
+
+# | splits left/right, as in .tmux.conf. This replaces herdr's default
+# prefix+v; prefix+minus for a top/bottom split already agrees with tmux.
+split_vertical = "prefix+|"
+
+# tmux resizes with a repeatable prefix+H/J/K/L. herdr has no repeat flag, so
+# these are one-shot; prefix+r opens resize mode for sustained adjustment.
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+
+# Defaults already matching .tmux.conf, left unset on purpose:
+#   prefix+c new tab, prefix+n/p and prefix+1..9 tab switching,
+#   prefix+h/j/k/l pane focus, prefix+x close pane, prefix+shift+x close tab,
+#   prefix+z zoom, prefix+[ copy mode (vi motions and search are built in),
+#   prefix+minus horizontal split.
+# New panes and tabs inherit the current directory by default
+# ([terminal] new_cwd = "follow"), as tmux did with -c "#{pane_current_path}".
+# Kept at herdr's defaults rather than tmux's: prefix+q detaches, prefix+r
+# enters resize mode and prefix+shift+r reloads this file.
+
+[ui]
+# tmux's prefix+c opens a window straight away rather than asking for a name.
+prompt_new_tab_name = false
+
+# Mouse support and copy-on-select are on by default, matching `set -g mouse on`.

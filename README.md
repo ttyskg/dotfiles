@@ -73,6 +73,32 @@ export NOTIFY_EMAIL="your_email@example.com"
   so 24-bit colour reaches programs inside panes. `COLORTERM` is forwarded from
   the attaching client, which is how Vim decides to switch `termguicolors` on.
 
+## herdr
+
+`config/herdr/config.toml` is symlinked to `~/.config/herdr/config.toml`. The
+rest of `~/.config/herdr` — logs, sockets, `session.json` — is runtime state and
+is deliberately not tracked, which is why `setup.sh` links the file rather than
+the directory.
+
+The bindings follow `.tmux.conf` where the two disagree, and stay at herdr's
+defaults where they already agree:
+
+| | tmux | herdr |
+| --- | --- | --- |
+| prefix | `C-a` | `C-a` (herdr's own default is `C-b`) |
+| split | `\|` and `-` | `\|` and `-` |
+| pane focus / resize | `h`/`j`/`k`/`l`, `H`/`J`/`K`/`L` | the same, but resizing does not repeat; `prefix r` opens resize mode |
+| detach | `prefix d` | `prefix q` |
+| reload | `prefix r` | `prefix shift+R`, or `herdr server reload-config` |
+
+`herdr config check` validates the file before a reload.
+
+What did not carry over from tmux: there is no `synchronize-panes`, no paste
+binding to match `prefix ]`, and no `escape-time` equivalent — herdr holds a
+lone `Esc` for one flush and the delay is not configurable. Copy mode has vi
+motions built in but its keys cannot be rebound, and copying leaves through
+OSC 52 to the outer terminal instead of a pipe to `clip.exe`.
+
 ## Utilities
 
 Installed by `setup.sh` into `~/.local/bin`, with any `.sh`/`.py` suffix
@@ -106,3 +132,7 @@ stripped:
 - Run `./setup.sh` for normal setup.
 - Run `./setup.sh --dry-run` to preview changes without writing files.
 - Run `./setup.sh --force` to overwrite copied local files such as `~/.msmtprc`.
+
+It links from three places: dotfiles at the repository root go to `~/`, `bin/*`
+goes to `~/.local/bin` with any `.sh`/`.py` suffix stripped, and the tree under
+`config/` is mirrored file by file into `$XDG_CONFIG_HOME` (`~/.config`).

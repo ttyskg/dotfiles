@@ -84,4 +84,16 @@ for f in bin/*; do
   run_cmd ln -snfv "$THIS_DIR/$f" "$HOME/.local/bin/$bin_name"
 done
 
+# Make symbolic links of config/* to $XDG_CONFIG_HOME, mirroring the tree
+# below config/. These are linked file by file rather than directory by
+# directory: ~/.config/herdr, for one, also holds logs, sockets and
+# session.json, which are runtime state and must stay out of this repository.
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+find config -type f ! -name '*.example' | while IFS= read -r f; do
+  rel="${f#config/}"
+  run_cmd mkdir -p "$XDG_CONFIG_HOME/$(dirname "$rel")"
+  run_cmd ln -snfv "$THIS_DIR/$f" "$XDG_CONFIG_HOME/$rel"
+done
+
 echo "finished!"
