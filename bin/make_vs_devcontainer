@@ -1,73 +1,104 @@
 #!/bin/bash
-
-# Make .devcontainer directory for VS code.
-# .devcontainer
-#  |- devcontainer.json
-#  |- docker-compose.yml
-#  |- Dockerfile
-#  |- .env
-#  |- requirements.txt
-#  |_ requirements.r
+#
+# Create a .devcontainer directory for VS Code in the current directory.
+#
+#   .devcontainer
+#    |- devcontainer.json
+#    |- docker-compose.yml
+#    |- Dockerfile
+#    |_ requirements.txt
 
 set -eu
 
+FORCE=false
+
+show_help() {
+  echo "Usage: $(basename "$0") [--force]"
+  echo
+  echo "  --force   Overwrite an existing .devcontainer directory"
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --force)
+      FORCE=true
+      ;;
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      show_help
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+if [ -e .devcontainer ] && [ "$FORCE" = false ]; then
+  echo ".devcontainer already exists. Use --force to overwrite." >&2
+  exit 1
+fi
+
 echo "Making .devcontainer directory..."
-mkdir .devcontainer
+mkdir -p .devcontainer
 
-cd .devcontainer
-
-
-echo "  Making devcontainer.json"
-echo '{
+echo "  devcontainer.json"
+cat > .devcontainer/devcontainer.json <<'EOF'
+{
+    "name": "python-dev",
     "dockerComposeFile": "docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/tmp/work",
-    "extensions": [
-        "DavidAnson.vscode-markdownlint",
-        "eamodio.gitlens",
-        "github.vscode-pull-request-github",
-        "ionutvmi.path-autocomplete",
-        "jrebocho.vscode-random",
-        "njpwerner.autodocstring",
-        "marp-team.marp-vscode",
-        "mechatroner.rainbow-csv",
-        "ms-python.isort",
-        "ms-python.pylint",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-toolsai.jupyter",
-        "ms-toolsai.jupyter-renderers",
-        "shardulm94.trailing-spaces",
-        "streetsidesoftware.code-spell-checker",
-        "usernamehw.errorlens"
-    ]
-}' > devcontainer.json
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "charliermarsh.ruff",
+                "DavidAnson.vscode-markdownlint",
+                "eamodio.gitlens",
+                "github.vscode-pull-request-github",
+                "ionutvmi.path-autocomplete",
+                "jrebocho.vscode-random",
+                "njpwerner.autodocstring",
+                "marp-team.marp-vscode",
+                "mechatroner.rainbow-csv",
+                "ms-python.mypy-type-checker",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter",
+                "ms-toolsai.jupyter-renderers",
+                "shardulm94.trailing-spaces",
+                "streetsidesoftware.code-spell-checker",
+                "usernamehw.errorlens"
+            ]
+        }
+    }
+}
+EOF
 
-
-echo "  Making docker-compose.yml"
-echo "\
-version: '3.3'
-
+echo "  docker-compose.yml"
+cat > .devcontainer/docker-compose.yml <<'EOF'
 services:
   dev:
     build: .
     stdin_open: true
-    working_dir: '/tmp/work'
+    working_dir: "/tmp/work"
     volumes:
-      - ..:/tmp/work" > docker-compose.yml
+      - ..:/tmp/work
+EOF
 
-
-echo "  Making Dockerfile"
-echo '\
-FROM python:3.11.4
+echo "  Dockerfile"
+cat > .devcontainer/Dockerfile <<'EOF'
+FROM python:3.13
 
 # create non-root user
 RUN groupadd -r docker \
     && useradd -r -g docker -s /bin/bash -m docker
 
-# Install requried packages
-# Note: chromium is needed for creating pdf via marp. If you do not use marp
-#       you can skip installing chromium.
+# Install required packages.
+# Note: chromium is only needed to render PDFs with marp. Drop it if you do
+#       not use marp; it is by far the largest part of this image.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     git \
@@ -75,38 +106,31 @@ RUN apt-get update \
     chromium \
     && rm -rf /var/lib/apt/lists/*
 
-# Setup working directory
 WORKDIR /tmp/work
 
-COPY requirements.txt \${PWD}
+COPY requirements.txt ./
 
-RUN pip install --no-cache-dir --upgrade pip \\
+RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-RUN pylint --generate-rcfile > .pylintrc
+ENV PYTHONPATH=/tmp/work/mylib
 
-ENV PYTHONPATH "${PYTHONPATH}:/tmp/work/mylib"
+USER docker
+EOF
 
-# set non root user
-USER docker' > Dockerfile
-
-
-echo "  Making reuirements.txt"
-echo "\
-black
-flake8
-matplotlib
+echo "  requirements.txt"
+cat > .devcontainer/requirements.txt <<'EOF'
+# ruff replaces black, flake8, isort, pylint and yapf.
+ruff
 mypy
+pytest
+pytest-cov
+matplotlib
 numpy
 pandas
-pylint
-pytest
-pytest-flake8
-pytest-mypy
-pytest-pylint
 rich
 tabulate
 tqdm
-yapf
-" >> requirements.txt
+EOF
 
+echo "finished!"
