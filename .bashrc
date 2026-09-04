@@ -2,6 +2,73 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# =====================================================================
+# Settings for every shell, interactive or not.
+#
+# Everything below the interactive guard is skipped by non-interactive
+# shells (`ssh host command`, cron, editors and CLI agents), so PATH and
+# exported variables have to be set up here to be usable at all.
+# =====================================================================
+
+# change file/directory permission to Linux default.
+umask 022
+
+path_prepend() {
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) export PATH="$1:$PATH" ;;
+    esac
+}
+
+# NodeBrew setting
+if [ -d "$HOME/.nodebrew/current/bin" ]; then
+    path_prepend "$HOME/.nodebrew/current/bin"
+fi
+
+# Bioinformatic tools
+if [ -d "$HOME/bin/samtools/bin" ]; then
+    path_prepend "$HOME/bin/samtools/bin"
+fi
+if [ -d "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin" ]; then
+    path_prepend "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin"
+fi
+
+# Add local bin to PATH
+path_prepend "$HOME/.local/bin"
+
+# bun setting
+export BUN_INSTALL="$HOME/.bun"
+if [ -d "$BUN_INSTALL/bin" ]; then
+    path_prepend "$BUN_INSTALL/bin"
+fi
+
+# pipenv setting
+export PIPENV_VENV_IN_PROJECT="enabled"
+
+# X server setting for WSL
+if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
+    if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] && [ -r /etc/resolv.conf ]; then
+        WSL_HOST_IP=$(awk '/^nameserver / {print $2; exit}' /etc/resolv.conf)
+        if [ -n "$WSL_HOST_IP" ]; then
+            export DISPLAY="${WSL_HOST_IP}:0.0"
+        fi
+        unset WSL_HOST_IP
+    fi
+
+    if [ -z "${WAYLAND_DISPLAY:-}" ]; then
+        export LIBGL_ALWAYS_INDIRECT=1
+    fi
+fi
+
+# Load local machine-specific settings (not tracked in Git)
+if [ -f ~/.bashrc.local ] && [ -O ~/.bashrc.local ]; then
+    . ~/.bashrc.local
+fi
+
+# =====================================================================
+# Interactive shells only
+# =====================================================================
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -105,25 +172,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# change file/directory permission to Linux default.
-umask 022
-
-# X server setting for WSL
-if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
-    if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ] && [ -r /etc/resolv.conf ]; then
-        WSL_HOST_IP=$(awk '/^nameserver / {print $2; exit}' /etc/resolv.conf)
-        if [ -n "$WSL_HOST_IP" ]; then
-            export DISPLAY="${WSL_HOST_IP}:0.0"
-        fi
-        unset WSL_HOST_IP
-    fi
-
-    if [ -z "${WAYLAND_DISPLAY:-}" ]; then
-        export LIBGL_ALWAYS_INDIRECT=1
-    fi
-fi
-
-
 # Prompt setting
 export PROMPT_DIRTRIM=1
 function parse_git_branch {
@@ -141,29 +189,6 @@ if [[ -t 0 ]]; then
     stty stop undef
     stty start undef
 fi
-
-path_prepend() {
-    case ":$PATH:" in
-        *":$1:"*) ;;
-        *) export PATH="$1:$PATH" ;;
-    esac
-}
-
-# NodeBrew setting
-if [ -d "$HOME/.nodebrew/current/bin" ]; then
-    path_prepend "$HOME/.nodebrew/current/bin"
-fi
-
-# Bioinformatic tools
-if [ -d "$HOME/bin/samtools/bin" ]; then
-    path_prepend "$HOME/bin/samtools/bin"
-fi
-if [ -d "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin" ]; then
-    path_prepend "$HOME/bin/sratoolkit.2.10.8-ubuntu64/bin"
-fi
-
-# pipenv setting
-export PIPENV_VENV_IN_PROJECT="enabled"
 
 # set Vim-style command-line editing
 set -o vi
@@ -191,18 +216,4 @@ if shopt -q login_shell; then
             . "$HOME/.ssh/ssh-agent" > /dev/null 2>&1
         fi
     fi
-fi
-
-# Add local bin to PATH
-path_prepend "$HOME/.local/bin"
-
-# Load local machine-specific settings (not tracked in Git)
-if [ -f ~/.bashrc.local ] && [ -O ~/.bashrc.local ]; then
-    . ~/.bashrc.local
-fi
-
-# bun setting
-export BUN_INSTALL="$HOME/.bun"
-if [ -d "$BUN_INSTALL/bin" ]; then
-    path_prepend "$BUN_INSTALL/bin"
 fi
