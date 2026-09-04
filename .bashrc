@@ -132,7 +132,16 @@ fi
 
 # Prompt setting
 export PROMPT_DIRTRIM=1
+# Print "(branch)", or "(short sha)" when HEAD is detached.
+# Locate .git in bash first: outside a repository this forks nothing, whereas
+# the git calls below would always cost two processes per prompt.
 function parse_git_branch {
+    local dir="$PWD"
+    until [ -e "$dir/.git" ]; do
+        [ -n "$dir" ] || return
+        dir="${dir%/*}"
+    done
+
     local branch
     branch=$(git branch --show-current 2> /dev/null)
     if [ -z "$branch" ]; then
