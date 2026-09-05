@@ -61,5 +61,46 @@ alias cb='clipboard'
 alias cbx='clipboard -x'
 
 
-# others
-alias connect_gdrive='sudo mount -t drvfs G: /mnt/g -o metadata'
+# Google Drive (WSL)
+#
+# Drive for Desktop exposes G: as a Dokan volume on the Windows side. drvfs
+# can mount it -- measured 2026-09-05: listing, reading, writing, appending
+# and deleting all work, and writes reach the cloud -- but WSL never mounts it
+# on its own and the mount does not survive a restart.
+#
+#   gdrive            mount if needed, then cd into My Drive
+#   gdrive <subpath>  the same, one level deeper
+#   gdrive -u         unmount
+#
+# Mounting is idempotent, so running it on an already-mounted drive just cds.
+#
+# Known limits of the volume, all measured: no symlinks, no hard links, and
+# names are case-insensitive. chmod is worse than unsupported -- under
+# metadata it exits 0 and leaves the mode at 777 -- so nothing here may rely
+# on permissions. mtime writes do work, but only once metadata is on.
+# Keep git repositories and analysis working directories off it. The first
+# read of a file hydrates it from the cloud (~1 s); cached reads are ~20 ms.
+GDRIVE_MOUNT=/mnt/g
+
+gdrive() {
+    if [ "$1" = "-u" ]; then
+        sudo umount "$GDRIVE_MOUNT" && echo "gdrive: unmounted $GDRIVE_MOUNT"
+        return
+    fi
+
+    if ! mountpoint -q "$GDRIVE_MOUNT"; then
+        [ -d "$GDRIVE_MOUNT" ] || sudo mkdir -p "$GDRIVE_MOUNT" || return 1
+        # metadata/uid/gid are what we would like. Fall back to a bare mount
+        # rather than failing outright if drvfs rejects them on this volume.
+        sudo mount -t drvfs G: "$GDRIVE_MOUNT" \
+                -o "metadata,uid=$(id -u),gid=$(id -g)" 2> /dev/null \
+            || sudo mount -t drvfs G: "$GDRIVE_MOUNT" \
+            || { echo "gdrive: mount failed -- is Drive for Desktop running?" >&2
+                 return 1; }
+    fi
+
+    cd "$GDRIVE_MOUNT/My Drive${1:+/$1}"
+}
+
+# Kept for muscle memory: the name this function replaces (alias added 2022-04-25).
+alias connect_gdrive='gdrive'

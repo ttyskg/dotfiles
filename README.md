@@ -115,6 +115,12 @@ stripped:
 ## Runtime notes
 
 - `.bashrc` sets `DISPLAY` only when running in WSL.
+- `gdrive` (a shell function in `.bash_aliases`) mounts the Windows-side Google
+  Drive on `/mnt/g` when it is not already there and cds into `My Drive`;
+  `gdrive -u` unmounts. It is on demand rather than in `/etc/fstab` because
+  Drive for Desktop may not be running yet when WSL starts. The volume has no
+  symlinks and is case-insensitive, and `chmod` there exits 0 without changing
+  anything, so keep git repositories and analysis working directories off it.
 - SSH agent: login shells start it (`keychain`, or a plain `ssh-agent` fallback).
   *Every* shell, non-interactive ones included, then adopts an agent that is
   already running, so `git push` works from scripts and CLI agents without
