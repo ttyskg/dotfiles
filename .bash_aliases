@@ -54,6 +54,13 @@ alias cs='claude-science'
 alias css='claude-science serve --port 8765 --no-browser'
 
 
+# Claude Code
+# Worker pane for the multi-pane workflow. --strict-mcp-config skips MCP, so it
+# never starts a second `gbrain serve` (a bare `claude` in a second pane dies
+# with CONNECTION_CLOSED).
+alias worker='claude --strict-mcp-config'
+
+
 # my alias
 # These pointed at ~/bin/, which does not exist: setup.sh installs to
 # ~/.local/bin, and that is on PATH.
