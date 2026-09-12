@@ -5,6 +5,7 @@
 [core]
 	# .vimrc already forces utf-8, so the -c "set fenc=utf-8" is redundant.
 	editor = vim
+	excludesfile = /home/ttyskg/.config/git/ignore
 
 [init]
 	defaultBranch = main
