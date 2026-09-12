@@ -111,3 +111,14 @@ gdrive() {
 
 # Kept for muscle memory: the name this function replaces (alias added 2022-04-25).
 alias connect_gdrive='gdrive'
+
+# --- gbrain: doctor の cycle_freshness 閾値 (2026-09-12) ---
+# 既定は WARN 6h / FAIL 24h で、autopilot が数分おきに回る前提の値。
+# この脳は PGLite 単一書き手で autopilot が使えず、重いサイクルは serve を止めて
+# 週次で手回しする運用（GBrain workspace の HEARTBEAT.md「重メンテの手順」）。
+# 既定のままだと cycle_freshness が恒常的に FAIL になり doctor の総合判定が意味を失うため、
+# 「1 週間飛ばしたら warn / 2 週間で fail」に合わせる。
+# env 専用でこの脳の config プレーンからは読めないので、CLI 経路はここで、
+# MCP 経路は GBrain workspace の .mcp.json で設定する（両方に要る）。
+export GBRAIN_CYCLE_FRESHNESS_WARN_HOURS=168
+export GBRAIN_CYCLE_FRESHNESS_FAIL_HOURS=336
