@@ -55,10 +55,13 @@ alias css='claude-science serve --port 8765 --no-browser'
 
 
 # Claude Code
-# Worker pane for the multi-pane workflow. --strict-mcp-config skips MCP, so it
-# never starts a second `gbrain serve` (a bare `claude` in a second pane dies
-# with CONNECTION_CLOSED).
-alias worker='claude --strict-mcp-config'
+# Worker pane for the multi-pane workflow. The empty MCP allowlist loads no MCP
+# server by default, so it never starts a second `gbrain serve` (a bare `claude`
+# in a second pane dies with CONNECTION_CLOSED). A worker directory can allow
+# claude.ai connectors by URL in its .claude/settings.json (allowedMcpServers
+# merges across scopes); gbrain and Google Drive stay denied.
+# --strict-mcp-config is not used: it also drops claude.ai connectors.
+alias worker='claude --settings '\''{"allowedMcpServers":[],"deniedMcpServers":[{"serverName":"gbrain"},{"serverName":"claude.ai Google Drive"}]}'\'''
 
 
 # my alias
