@@ -55,13 +55,17 @@ alias css='claude-science serve --port 8765 --no-browser'
 
 
 # Claude Code
-# Worker pane for the multi-pane workflow. The empty MCP allowlist loads no MCP
-# server by default, so it never starts a second `gbrain serve` (a bare `claude`
-# in a second pane dies with CONNECTION_CLOSED). A worker directory can allow
-# claude.ai connectors by URL in its .claude/settings.json (allowedMcpServers
-# merges across scopes); gbrain and Google Drive stay denied.
-# --strict-mcp-config is not used: it also drops claude.ai connectors.
-alias worker='claude --settings '\''{"allowedMcpServers":[],"deniedMcpServers":[{"serverName":"gbrain"},{"serverName":"claude.ai Google Drive"}]}'\'''
+# Worker pane for the multi-pane workflow (2026-10-03: gbrain read-only).
+# The brain DB is the shared Postgres on uva, so a second `gbrain serve` is fine.
+# ~/.config/claude-worker/ is generated per machine by
+# ~/docs/gbrain/scripts/gen-worker-config.sh: gbrain is allowed, its mutating
+# tools are denied (hidden from the worker), Google Drive stays denied, and the
+# worker contract is appended to the system prompt. A worker directory can allow
+# more claude.ai connectors by URL in its .claude/settings.json.
+# Re-run the generator after a gbrain version bump or a contract edit.
+alias worker='claude --settings ~/.config/claude-worker/settings.json --mcp-config ~/.config/claude-worker/mcp.json --append-system-prompt-file ~/.config/claude-worker/WORKER_CONTRACT.md'
+# Previous definition (2026-09-15): no MCP server by default, gbrain denied.
+alias worker-nobrain='claude --settings '\''{"allowedMcpServers":[],"deniedMcpServers":[{"serverName":"gbrain"},{"serverName":"claude.ai Google Drive"}]}'\'''
 
 
 # my alias
