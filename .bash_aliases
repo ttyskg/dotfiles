@@ -119,6 +119,9 @@ gdrive() {
 # Kept for muscle memory: the name this function replaces (alias added 2022-04-25).
 alias connect_gdrive='gdrive'
 
+# 一日の始めに 1 回: apt・Claude・Claude Science の更新、Drive のマウント、herdr（dotfiles/bin/quickstart.sh）
+alias qs='quickstart'
+
 # --- gbrain: doctor の cycle_freshness 閾値 (2026-09-12) ---
 # 既定は WARN 6h / FAIL 24h で、autopilot が数分おきに回る前提の値。
 # この脳は PGLite 単一書き手で autopilot が使えず、重いサイクルは serve を止めて

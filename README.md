@@ -111,6 +111,7 @@ stripped:
 | `notify_me [-s SUBJECT] [-b BODY]` | Send mail through `msmtp` to `$NOTIFY_EMAIL`. |
 | `fix-jis-names [-r] [--apply] [PATH...]` | Restore Japanese filenames mangled by a CP437 misread. Dry run unless `--apply`. |
 | `make_vs_devcontainer [--force]` | Write a `.devcontainer/` (Python image, Compose, ruff/mypy/pytest) into the current directory. |
+| `quickstart` | Start-of-day routine: `apt` upgrade, `claude update`, `claude-science update`, mount Google Drive at `/mnt/g` (WSL only), then launch `herdr`. Asks for sudo once. Aliased to `qs`. |
 
 ## Runtime notes
 
