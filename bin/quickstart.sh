@@ -4,7 +4,7 @@
 #   2. Claude Code の更新
 #   3. Claude Science の更新
 #   4. Google Drive（G:）を /mnt/g にマウント  ← sudo、WSL のときだけ（uva などでは飛ばす）
-#   5. 上がすべて終わったら herdr を起動
+#   5. herdr の更新を確認（新しい版があれば聞いてから更新）して起動
 # sudo のパスワードは最初に 1 回だけ聞く。途中で失敗した段があれば最後にまとめて表示し、
 # herdr を起動するかを確認する（全部成功なら確認なしで起動）。
 #
@@ -63,8 +63,39 @@ fi
 
 kill "$SUDO_KEEPALIVE" 2>/dev/null
 
-# 5. herdr
+# 5. herdr の更新の確認 → 起動
+#    herdr の中から打ったときは更新しない（herdr 自身が「デタッチしてから herdr update」と案内する）。
+#    新しい版があれば確認してから `herdr update --handoff`（動いているサーバーへ引き継ぐ）。
 step "5. herdr"
+if [ -n "${HERDR_ENV:-}" ]; then
+  echo "herdr の中から実行されているので、herdr の更新と起動は飛ばす（デタッチしてから qs）"
+  [ ${#FAILED[@]} -gt 0 ] && printf '\033[31m失敗した段: %s\033[0m\n' "${FAILED[*]}"
+  exit 0
+fi
+herdr_cur=$(herdr --version 2>/dev/null | awk '{print $2}')
+herdr_latest=$(curl -fsS --max-time 10 https://herdr.dev/latest.json 2>/dev/null | jq -r '.version // empty' 2>/dev/null)
+if [ -z "$herdr_latest" ]; then
+  ng "herdr の更新確認（herdr.dev に届かない）"
+elif [ "$herdr_cur" != "$herdr_latest" ] \
+     && [ "$(printf '%s\n%s\n' "$herdr_cur" "$herdr_latest" | sort -V | tail -1)" = "$herdr_latest" ]; then
+  echo "herdr $herdr_cur → $herdr_latest"
+  echo "  https://github.com/herdrdev/herdr/releases/tag/v$herdr_latest"
+  read -r -p "herdr を更新しますか [y/N] " ans
+  case "$ans" in
+    [yY]*)
+      if herdr update --handoff; then
+        ok
+        herdr status 2>/dev/null | grep -q 'restart_needed: yes' \
+          && echo "⚠ サーバーの再起動が必要です（herdr server stop → herdr。中のペーンはすべて落ちる）"
+      else
+        ng "herdr update"
+      fi ;;
+    *) echo "更新しない" ;;
+  esac
+else
+  echo "herdr $herdr_cur（最新）"; ok
+fi
+
 if [ ${#FAILED[@]} -gt 0 ]; then
   printf '\033[31m失敗した段: %s\033[0m\n' "${FAILED[*]}"
   read -r -p "herdr を起動しますか [Y/n] " ans
