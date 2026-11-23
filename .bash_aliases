@@ -73,6 +73,21 @@ alias worker='claude --settings ~/.config/claude-worker/settings.json --mcp-conf
 alias steward='claude --settings ~/.config/claude-steward/settings.json --mcp-config ~/.config/claude-steward/mcp.json --append-system-prompt-file ~/.config/claude-steward/STEWARD_CONTRACT.md'
 # Previous definition (2026-09-15): no MCP server by default, gbrain denied.
 alias worker-nobrain='claude --settings '\''{"allowedMcpServers":[],"deniedMcpServers":[{"serverName":"gbrain"},{"serverName":"claude.ai Google Drive"}]}'\'''
+# herdr restores a pane by typing a bare `claude --resume <id>`, which drops the
+# steward/worker flags. If the current directory is marked (.claude/steward.md
+# or .claude/worker) and no --settings is given, add the same flags as above.
+claude() {
+  local d= c=
+  if [ -f .claude/steward.md ]; then d=~/.config/claude-steward c=STEWARD_CONTRACT.md
+  elif [ -f .claude/worker ]; then d=~/.config/claude-worker c=WORKER_CONTRACT.md
+  fi
+  case " $* " in *" --settings "*) d= ;; esac
+  if [ -n "$d" ]; then
+    command claude --settings "$d/settings.json" --mcp-config "$d/mcp.json" --append-system-prompt-file "$d/$c" "$@"
+  else
+    command claude "$@"
+  fi
+}
 
 
 # my alias
